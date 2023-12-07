@@ -35,10 +35,17 @@ class Sales{
 
         return $producto;
     }
-    public function crlRegisterVenta($array, $totalVenta, $payment) {
-        error_log('Products::ctrListarNombreProductos');
-        $producto = Salesmodel::mdlRegisterVenta($array, $totalVenta, $payment);
+    
+    public function crlRegisterVenta($array, $totalVenta, $payment, $id_open) {
+        error_log('Sales::crlRegisterVenta');
+        error_log($id_open);
+        error_log($id_open);
+        error_log($id_open);
+        error_log($id_open);
+        error_log($id_open);
+        error_log($id_open);
 
+        $producto = Salesmodel::mdlRegisterVenta($array, $totalVenta, $payment, $id_open);
         return $producto;
     }
 
