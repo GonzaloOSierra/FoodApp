@@ -57,7 +57,7 @@ session_start();
                      </a>
                      <ul class="nav nav-treeview">
                          <li class="nav-item">
-                             <a href="#" class="nav-link" style="cursor:pointer;" onclick="CargarContenido('views/sales/index.php','content-wrapper')">
+                             <a href="#" class="nav-link" style="cursor:pointer;" onclick="CargarContenido('views/sales/index.php?session_id=<?= session_id() ?>','content-wrapper')">
                                  <i class="far fa-circle nav-icon"></i>
                                  <p>Punto de Venta</p>
                              </a>
@@ -65,7 +65,47 @@ session_start();
                          
                      </ul>
                  </li>
-                 
+
+                 <?php }  if ($_SESSION["user_role"]==2 or $_SESSION["user_role"]==1) { ?>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                     <i class="nav-icon fas fa-store-alt text-warning"></i> 
+                         <p>Cocinas<i class="right fas fa-angle-left"></i></p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link" style="cursor:pointer;" onclick="CargarContenido('views/kitchen/kitchen.php','content-wrapper')">
+                                 <i class="far fa-circle nav-icon"></i>
+                                 <p>Cocina</p>
+                             </a>
+                         </li>
+                         
+                     </ul>
+                 </li>
+
+                 <?php }  if ($_SESSION["user_role"]==1) { ?>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                     
+                     <i class="nav-icon fas fa-utensils text-warning"></i>
+                         <p>Caja<i class="right fas fa-angle-left"></i></p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link" style="cursor: pointer;" onclick="CargarContenido('views/opening/opening.php','content-wrapper')">
+                                 <i class="far fa-circle nav-icon"></i>
+                                 <p>Administrar Caja</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="#" class="nav-link" style="cursor: pointer;" onclick="CargarContenido('views/opening/opened_list.php','content-wrapper')">
+                                 <i class="far fa-circle nav-icon"></i>
+                                 <p>Aberturas</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+
                  <?php }  if ($_SESSION["user_role"]==1) { ?>
                  <li class="nav-item">
                      <a href="#" class="nav-link">
@@ -168,6 +208,23 @@ session_start();
                              <a href="#" class="nav-link" style="cursor:pointer;" onclick="CargarContenido('views/providers/create_providers.php','content-wrapper')">
                                  <i class="far fa-circle nav-icon"></i>
                                  <p>Agregar</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+
+                 <?php }  if ($_SESSION["user_role"]==1) { ?>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                     
+                     <i class="nav-icon fas fa-utensils text-warning"></i>
+                         <p>Establecimiento<i class="right fas fa-angle-left"></i></p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link" style="cursor: pointer;" onclick="CargarContenido('views/establishment/create_terminal.php','content-wrapper')">
+                                 <i class="far fa-circle nav-icon"></i>
+                                 <p>Agregar Terminal</p>
                              </a>
                          </li>
                      </ul>
