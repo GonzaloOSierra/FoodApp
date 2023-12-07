@@ -84,21 +84,25 @@ try {
 <!-- Muestra los botones de apertura y cierre del empleado. -->
 
 
-<?php
-if ($state == 1 && 
-    $lastItem->getStart_date() < $f_actual_str && 
-    $f_actual_str < $lastItem->getFinal_date() && 
-    $lastItem->getOpened() == 0) {
-        echo '<button id="openedBtn' . $usuario->getId() . '" class="btn btn-success" type="button" onclick="confirmOpened(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">APERTURA DE CAJA</button>';
+<div class="text-center">
+    <?php
+    if ($state == 1 && 
+        $lastItem->getStart_date() < $f_actual_str && 
+        $f_actual_str < $lastItem->getFinal_date() && 
+        $lastItem->getOpened() == 0) {
+            echo '<button id="openedBtn' . $usuario->getId() . '" class="btn btn-success d-block mx-auto mb-2" type="button" onclick="confirmOpened(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">APERTURA DE CAJA</button>';
     }
-    
+
     if($state == 1 && 
-    $lastItem->getStart_date() < $f_actual_str && 
-    $f_actual_str < $lastItem->getFinal_date() && 
-    $lastItem->getOpened() == 1) {
-        echo '<button id="CloseBtn' . $usuario->getId() . '" class="btn btn-danger" type="button" onclick="confirmClosed(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">CIERRE DE CAJA</button>';
+        $lastItem->getStart_date() < $f_actual_str && 
+        $f_actual_str < $lastItem->getFinal_date() && 
+        $lastItem->getOpened() == 1) {
+            echo '<button id="CloseBtn' . $usuario->getId() . '" class="btn btn-danger d-block mx-auto" type="button" onclick="confirmClosed(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">CIERRE DE CAJA</button>';
     
-?>
+    ?>
+</div>
+
+
 <!-- Grabala idOpen como variable global.-->
 
 <script>
