@@ -30,13 +30,15 @@ $fechaFinRango = isset($_POST['fechaFin']) ? $_POST['fechaFin'] : null;
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         /* Agrega estilos según sea necesario */
-        
+        body {
+    background-color: #f4f6f9; /* o el color gris que prefieras */
+}
     </style>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <body>
-<div class="container">
+<div class="container_fluid">
     <h1 class="mt-6">Aberturas</h1>
 
 
@@ -57,12 +59,26 @@ $fechaFinRango = isset($_POST['fechaFin']) ? $_POST['fechaFin'] : null;
 
         <select name="employee_name" id="employee_name" class="form-select">
             <option value="">Seleccionar Nombre</option>
-            <?php foreach ($openers as $open): ?>
-                <option value="<?php echo $open->getName_employee() . ' ' . $open->getLast_name_employee(); ?>">
-                    <?php echo $open->getName_employee() . ' ' . $open->getLast_name_employee(); ?>
-                </option>
-            <?php endforeach; ?>
+            <?php
+            $addedNames = array(); // Array para almacenar nombres agregados
+
+            foreach ($openers as $open):
+                $fullName = $open->getName_employee() . ' ' . $open->getLast_name_employee();
+
+                // Verificar si el nombre ya se agregó antes
+                if (!in_array($fullName, $addedNames)):
+                    ?>
+                    <option value="<?php echo $fullName; ?>">
+                        <?php echo $fullName; ?>
+                    </option>
+                    <?php
+                    // Agregar el nombre a la lista de nombres agregados
+                    $addedNames[] = $fullName;
+                endif;
+            endforeach;
+            ?>
         </select>
+
         </div>
         </div>
             <button onclick="buscar()" class="btn btn-primary mt-4">Buscar</button>
