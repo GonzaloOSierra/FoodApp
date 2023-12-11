@@ -217,7 +217,7 @@ class OpenModel extends Model{
 
      public function getId_open(){                                  return $this->id_open;}
      public function getId_employee(){                              return $this->id_employee;}
-     public function getAmount_credir(){                            return $this->amount_credit;}
+     public function getAmount_credit(){                            return $this->amount_credit;}
      public function getAmount_efective(){                          return $this->amount_efective;}
      public function getAmount_qr(){                                return $this->amount_qr;}
      public function getAmount_debito(){                            return $this->amount_debito;}
