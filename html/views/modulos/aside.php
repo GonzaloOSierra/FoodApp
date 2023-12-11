@@ -98,9 +98,9 @@ session_start();
                              </a>
                          </li>
                          <li class="nav-item">
-                             <a href="#" class="nav-link" style="cursor: pointer;" onclick="CargarContenido('views/opening/opened_list.php','content-wrapper')">
+                             <a href="#" class="nav-link" style="cursor: pointer;" onclick="CargarContenido('views/opening/estadistic.php','content-wrapper')">
                                  <i class="far fa-circle nav-icon"></i>
-                                 <p>Aberturas</p>
+                                 <p>Aberturas/Estadistica</p>
                              </a>
                          </li>
                      </ul>
