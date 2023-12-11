@@ -50,12 +50,14 @@ foreach ($yearsInRange as $currentYear) {
                 // Agrega una fila adicional al cambiar de semana con el total de la semana anterior
                 if ($numeroSemanaAnterior !== null) {
                     $html .= "<tr class='table-secondary'>
-                    <td colspan='11'>Semana {$numeroSemanaAnterior} - Mes: {$semanas[$numeroSemanaAnterior]['mes']} - Año: {$semanas[$numeroSemanaAnterior]['anio']} - 
-                        Total Semana (Credit): {$semanas[$numeroSemanaAnterior]['total_credit']} - 
-                        Total Semana (Efective): {$semanas[$numeroSemanaAnterior]['total_efective']} - 
-                        Total Semana (QR): {$semanas[$numeroSemanaAnterior]['total_qr']} - 
-                        Total Semana (Debito): {$semanas[$numeroSemanaAnterior]['total_debito']}
-                    </td>
+                    <td colspan='2'>Semana {$numeroSemanaAnterior} - Mes: {$semanas[$numeroSemanaAnterior]['mes']} - Año: {$semanas[$numeroSemanaAnterior]['anio']} -</td>
+                    <td colspan='2'>Total Semana (Credit): {$semanas[$numeroSemanaAnterior]['total_credit']} -</td>
+                    <td colspan='2'>Total Semana (Efective): {$semanas[$numeroSemanaAnterior]['total_efective']} -</td>
+                    <td colspan='2'>Total Semana (QR): {$semanas[$numeroSemanaAnterior]['total_qr']} -</td>
+                    <td colspan='2'>Total Semana (Debito): {$semanas[$numeroSemanaAnterior]['total_debito']}</td>
+                    <td colspan='2'></td>
+                    <td colspan='2'></td>
+                    <td colspan='1'></td>
                     </tr>";
                 }
 
@@ -68,8 +70,8 @@ foreach ($yearsInRange as $currentYear) {
                     }
 
                     $html = "<div class='year-results'>";
-                    $html .= "<table>";
-                    $html .= "<tr class='table-secondary'><td colspan='11'>Año: $anio</td></tr>";
+                    $html .= "<table class='table container-fluid'>"; // Agrega la clase container-fluid al formulario
+                    $html .= "<tr class='table-secondary'><td colspan='15'>Año: $anio</td></tr>";
                     $anioAnterior = $anio;
                 }
 
@@ -138,18 +140,20 @@ foreach ($yearsInRange as $currentYear) {
             <td>{$open->getAmount_debito_final()}</td>
         </tr>";
         }
+// Agrega la última fila adicional con el total de la última semana
+if ($numeroSemanaAnterior !== null) {
+    $html .= "<tr class='table-secondary responsive'>";
+    $html .= "<td colspan='2'>Semana {$numeroSemanaAnterior}</td>";
+    $html .= "<td colspan='2'>Mes: {$semanas[$numeroSemanaAnterior]['mes']}</td>";
+    $html .= "<td colspan='2'>Año: {$semanas[$numeroSemanaAnterior]['anio']}</td>";
+    $html .= "<td colspan='2'>Total Semana (Credit): {$semanas[$numeroSemanaAnterior]['total_credit']}</td>";
+    $html .= "<td colspan='2'>Total Semana (Efective): {$semanas[$numeroSemanaAnterior]['total_efective']}</td>";
+    $html .= "<td colspan='2'>Total Semana (QR): {$semanas[$numeroSemanaAnterior]['total_qr']}</td>";
+    $html .= "<td colspan='2'>Total Semana (Debito): {$semanas[$numeroSemanaAnterior]['total_debito']}</td>";
+    $html .= "<td colspan='1'></td>";
+    $html .= "</tr>";
+}
 
-        // Agrega la última fila adicional con el total de la última semana
-        if ($numeroSemanaAnterior !== null) {
-            $html .= "<tr class='table-secondary'>
-            <td colspan='11'>Semana {$numeroSemanaAnterior} - Mes: {$semanas[$numeroSemanaAnterior]['mes']} - Año: {$semanas[$numeroSemanaAnterior]['anio']} - 
-                Total Semana (Credit): {$semanas[$numeroSemanaAnterior]['total_credit']} - 
-                Total Semana (Efective): {$semanas[$numeroSemanaAnterior]['total_efective']} - 
-                Total Semana (QR): {$semanas[$numeroSemanaAnterior]['total_qr']} - 
-                Total Semana (Debito): {$semanas[$numeroSemanaAnterior]['total_debito']}
-            </td>
-            </tr>";
-        }
 
         // Cierra la tabla si hay datos al final del bucle
         if (!empty($html)) {
@@ -164,37 +168,78 @@ foreach ($yearsInRange as $currentYear) {
     // Ordena el array de totalesMesCredit de mayor a menor según el total
     arsort($totalesMesCredit);
 
-    // Muestra el total del mes y del año al final del resultado
-    echo "<div class='year-results'>";
-    echo "<table>";
-    echo "<tr class='table-secondary'><td colspan='11'>";
+// ...
 
-    foreach ($totalesMesCredit as $mes => $total) {
-        echo "Total de $mes (Credit): $total - ";
+// Muestra el total del mes y del año al final del resultado
+echo "<div class='year-results'>";
+echo "<table>";
+echo "<tr class='table-secondary'>";
+
+$numCols = 0; // Nueva variable para realizar un seguimiento del número de columnas
+
+foreach ($totalesMesCredit as $mes => $total) {
+    echo "<td colspan='2'>Total de $mes (Credit): $total - </td>";
+    $numCols += 2;
+
+    // Si se supera el límite de columnas, cierra la fila actual y comienza una nueva
+    if ($numCols >= 15) {
+        echo "</tr><tr class='table-secondary'>";
+        $numCols = 0;
     }
+}
 
-    foreach ($totalesMesEfective as $mes => $total) {
-        echo "Total de $mes (Efective): $total - ";
+// Repite el proceso para otras categorías
+foreach ($totalesMesEfective as $mes => $total) {
+    echo "<td colspan='2'>Total de $mes (Efective): $total - </td>";
+    $numCols += 2;
+    if ($numCols >= 15) {
+        echo "</tr><tr class='table-secondary'>";
+        $numCols = 0;
     }
+}
 
-    foreach ($totalesMesQr as $mes => $total) {
-        echo "Total de $mes (QR): $total - ";
+foreach ($totalesMesQr as $mes => $total) {
+    echo "<td colspan='2'>Total de $mes (QR): $total - </td>";
+    $numCols += 2;
+    if ($numCols >= 15) {
+        echo "</tr><tr class='table-secondary'>";
+        $numCols = 0;
     }
+}
 
-    foreach ($totalesMesDebito as $mes => $total) {
-        echo "Total de $mes (Debito): $total - ";
+foreach ($totalesMesDebito as $mes => $total) {
+    echo "<td colspan='2'>Total de $mes (Debito): $total - </td>";
+    $numCols += 2;
+    if ($numCols >= 15) {
+        echo "</tr><tr class='table-secondary'>";
+        $numCols = 0;
     }
+}
 
-    echo "</td></tr>";
+// Añade celdas vacías hasta alcanzar 15
+while ($numCols < 15) {
+    echo "<td colspan='2'></td>";
+    $numCols += 2;
+}
 
-    // Muestra los totales por año
-    echo "<tr class='table-secondary'><td colspan='11'>";
-    echo "Total del Año $anioAnterior (Credit): $totalesAnioCredit - ";
-    echo "Total del Año $anioAnterior (Efective): $totalesAnioEfective - ";
-    echo "Total del Año $anioAnterior (QR): $totalesAnioQr - ";
-    echo "Total del Año $anioAnterior (Debito): $totalesAnioDebito - ";
-    echo "</td></tr>";
-    echo "</table>";
-    echo "</div>";
+// Cierra la última fila
+echo "</tr>";
+// ...
+
+
+// Muestra los totales por año
+echo "<tr class='table-secondary responsive'>";
+echo "<td colspan='2'>Total del Año $anioAnterior (Credit):</td>";
+echo "<td colspan='2'>$totalesAnioCredit</td>";
+echo "<td colspan='2'>Total del Año $anioAnterior (Efective):</td>";
+echo "<td colspan='2'>$totalesAnioEfective</td>";
+echo "<td colspan='2'>Total del Año $anioAnterior (QR):</td>";
+echo "<td colspan='2'>$totalesAnioQr</td>";
+echo "<td colspan='2'>Total del Año $anioAnterior (Debito):</td>";
+echo "<td colspan='2'>$totalesAnioDebito</td>";
+echo "</tr>";
+echo "</table>";
+echo "</div>";
+
 }
 ?>
