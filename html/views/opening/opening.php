@@ -40,10 +40,22 @@ $terminals = $establishModel->getAll();
                         ?>
                     </select>
                 </div>
+                
                 <div class="mb-3">
+                    <label for="amount_credit" class="form-label">Monto en credito:</label>
+                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"  id="amount_credit" name="amount_credit" required>
+                </div>
                 <div class="mb-3">
-                    <label for="amount" class="form-label">Monto en efectivo:</label>
-                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"  id="amount" name="amount" required>
+                    <label for="amount_efective" class="form-label">Monto en efectivo:</label>
+                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"  id="amount_efective" name="amount_efective" required>
+                </div>
+                <div class="mb-3">
+                    <label for="amount_qr" class="form-label">Monto en QR:</label>
+                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"  id="amount_qr" name="amount_qr" required>
+                </div>
+                <div class="mb-3">
+                    <label for="amount_debito" class="form-label">Monto en Debito:</label>
+                    <input type="text" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="form-control"  id="amount_debito" name="amount_debito" required>
                 </div>
                 <div class="mb-3">
                     <label for="fecha">Selecciona fecha de inicio:</label>
