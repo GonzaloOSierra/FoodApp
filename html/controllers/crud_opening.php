@@ -18,17 +18,20 @@ class Crud_opening extends SessionController {
     }
 
     public function createOpen(){
-        if($this->existPOST(['username', 'terminal', 'amount', 'start_date','final_date'])){
-            $id_employee   = $_POST["username"];
-            $terminal      = $_POST["terminal"];
-            $amount        = $_POST["amount"];
-            $start_date    = $_POST["start_date"];
-            $final_date    = $_POST["final_date"];
-            $amount_final  = $_POST["amount"];
+        if($this->existPOST(['username', 'terminal', 'amount_credit','amount_efective','amount_qr','amount_debito', 'start_date','final_date'])){
+            $id_employee          = $_POST["username"];
+            $terminal             = $_POST["terminal"];
+            $amount_credit        = $_POST["amount_credit"];
+            $amount_efective      = $_POST["amount_efective"];
+            $amount_qr            = $_POST["amount_qr"];
+            $amount_debito        = $_POST["amount_debito"];
+            $start_date           = $_POST["start_date"];
+            $final_date           = $_POST["final_date"];
+            $amount_final         = $_POST["amount"];
 
 
             $openModel = new OpenModel();
-            if ($openModel->createOpen($id_employee, $amount, $start_date, $final_date, $terminal,$amount_final)) {
+            if ($openModel->createOpen($id_employee, $amount_credit, $amount_efective, $amount_qr, $amount_debito, $start_date, $final_date, $terminal,$amount_final)) {
                 echo "Caja asignada exitosamente.";
             } else {
                 echo "Error al asignar caja.";
