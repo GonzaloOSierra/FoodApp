@@ -26,7 +26,7 @@ foreach ($ventas as $venta) {
         }
 
         $currentOrderId = $venta->getO_id_Order();
-        $currentDetails = $venta->getD_name_menu() . ': ' . $venta->getD_Cant() . ' (' . $venta->getD_detail() . ')';
+        $currentDetails = $venta->getD_name_menu() . ': ' . $venta->getD_Cant();
         $currentButtonState = $venta->getO_order_State();
         if ($currentButtonState == 1) {
             $currentEstado = 'En Espera';
@@ -36,7 +36,7 @@ foreach ($ventas as $venta) {
             $currentEstado = 'Terminado';
         }
     } else {
-        $currentDetails .= ' + ' . $venta->getD_name_menu() . ': ' . $venta->getD_Cant() . ' (' . $venta->getD_detail() . ')';
+        $currentDetails .= ' + ' . $venta->getD_name_menu() . ': ' . $venta->getD_Cant();
     }
 }
 
@@ -84,7 +84,7 @@ if (!empty($rows)) {
                 <thead class="thead-dark">
                     <tr>
                         <th>ID Orden</th>
-                        <th>Nombre del Menú, Cantidad y Detalles</th>
+                        <th>Nombre del Menú y Cantidad</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
