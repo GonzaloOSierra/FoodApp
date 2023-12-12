@@ -1,3 +1,121 @@
+<?php
+session_start();
+
+include_once "/var/www/html/models/usermodel.php";
+include_once "/var/www/html/models/openmodel.php";
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+$userModel = new UserModel();
+
+
+?>
+
+
+<?php
+
+
+
+include_once "/var/www/html/clases/session.php";
+
+$session = new Session();
+
+// Verifica si existe una sesión y obtén el ID del usuario
+if ($session->exists()) {
+    $userId = $session->getCurrentUserId();
+} else {
+    echo "No hay sesión iniciada.";
+}
+
+$openModelInstance = new OpenModel();
+
+try {
+    $items = $openModelInstance->getAll();
+    $lastItem = null;
+
+    // Verificamos si hay datos
+    if (!empty($items)) {
+        // Recorremos los resultados con un bucle foreach
+        foreach ($items as $item) {
+            // Verificamos si el id_employee coincide con userId
+            if ($item->getId_employee() == $userId) {
+                // Almacenamos el último registro correspondiente a userId
+                $lastItem = $item;
+            }
+        }
+
+    } else {
+        echo "No se encontraron datos.";
+    }
+} catch (PDOException $e) {
+    echo "Error al obtener datos: " . $e->getMessage();
+}
+
+$idOpen = $lastItem->getId_open();
+
+date_default_timezone_set('America/Buenos_Aires'); // Reemplaza con la zona horaria de tu ubicación
+$fechaActual = new DateTime();
+$f_actual_str = $fechaActual->format('Y-m-d H:i:s');
+
+
+$state = 3;
+
+
+try {
+    $usuarios = $userModel->getAll();
+
+    foreach ($usuarios as $usuario) {
+        // Verificamos si el usuario actual tiene id_employee igual a userId y state igual a 1
+        if ($usuario->getId() == $userId && $usuario->getState() == 1) {         
+            $state = 1;
+        }
+    }
+} catch (PDOException $e) {
+    echo "Error al obtener datos: " . $e->getMessage();
+}
+
+
+?>
+
+
+<form>
+
+<!-- Muestra los botones de apertura y cierre del empleado. -->
+
+
+<div class="text-center">
+    <?php
+    if ($state == 1 && 
+        $lastItem->getStart_date() < $f_actual_str && 
+        $f_actual_str < $lastItem->getFinal_date() && 
+        $lastItem->getOpened() == 0) {
+            echo '<button id="openedBtn' . $usuario->getId() . '" class="btn btn-success d-block mx-auto mb-2" type="button" onclick="confirmOpened(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">APERTURA DE CAJA</button>';
+    }
+
+    if($state == 1 && 
+        $lastItem->getStart_date() < $f_actual_str && 
+        $f_actual_str < $lastItem->getFinal_date() && 
+        $lastItem->getOpened() == 1) {
+            echo '<button id="CloseBtn' . $usuario->getId() . '" class="btn btn-danger d-block mx-auto" type="button" onclick="confirmClosed(' . $usuario->getId() . ', ' . $lastItem->getId_open() . ', \'' . $f_actual_str . '\')">CIERRE DE CAJA</button>';
+    
+    ?>
+</div>
+
+
+<!-- Grabala idOpen como variable global.-->
+
+<script>
+
+    var idOpen = <?php echo $idOpen; ?>;
+    realizarVenta();
+
+</script>
+
+
+
+
+
 <!-- Content Header (Page header) -->
 <div class="content-header">
 <div class="container-fluid">
@@ -894,84 +1012,163 @@ function CargarProductos(producto = "") {
 /*===================================================================*/
 function realizarVenta() {
 
-    var count = 0;
-    var totalVenta = $("#totalVenta").html();
-    var nro_boleta = $("#iptNroVenta").val();
-    var paymetMethod = $("#selTipoPago").val();
+var count = 0;
+var totalVenta = $("#totalVenta").html();
+var nro_boleta = $("#iptNroVenta").val();
+var paymetMethod = $("#selTipoPago").val();
 
-    table.rows().eq(0).each(function(index) {
-        count = count + 1;
-    });
+table.rows().eq(0).each(function(index) {
+    count = count + 1;
+});
 
-    if (count > 0) {
+if (count > 0) {
 
-        if ($("#iptEfectivoRecibido").val() > 0 && $("#iptEfectivoRecibido").val() != "") {
+    if ($("#iptEfectivoRecibido").val() > 0 && $("#iptEfectivoRecibido").val() != "") {
 
-            if ($("#iptEfectivoRecibido").val() < parseFloat(totalVenta)) {
+        if ($("#iptEfectivoRecibido").val() < parseFloat(totalVenta)) {
 
-                mensajeToast('error', 'EL EFECTIVO ES MENOR EL COSTO TOTAL DE LA VENTA');
+            mensajeToast('error', 'EL EFECTIVO ES MENOR EL COSTO TOTAL DE LA VENTA');
 
-                return false;
-            }
-            
-            var formData = new FormData();
-            var arr = [];
+            return false;
+        }
+        
+        var formData = new FormData();
+        var arr = [];
 
-            table.rows().eq(0).each(function(index) {
+        table.rows().eq(0).each(function(index) {
 
-                var row = table.row(index);
+            var row = table.row(index);
 
-                var data = row.data();
+            var data = row.data();
 
-                arr[index] = data['id_menu'] + "," + parseFloat($.parseHTML(data['cantidad'])[0]['value']) + "," + data['total'].replace("$ ", "");
+            arr[index] = data['id_menu'] + "," + parseFloat($.parseHTML(data['cantidad'])[0]['value']) + "," + data['total'].replace("$ ", "");
 
-                formData.append('arr[]', arr[index]);
-               
-            });
+            formData.append('arr[]', arr[index]);
+           
+        });
 
-            // formData.append('nro_boleta', nro_boleta);
-            // formData.append('descripcion_venta', 'Venta realizada con Nro Boleta: ' + nro_boleta);
+        // formData.append('nro_boleta', nro_boleta);
+        // formData.append('descripcion_venta', 'Venta realizada con Nro Boleta: ' + nro_boleta);
             formData.append('total_venta', parseFloat(totalVenta));
             formData.append('payment', paymetMethod);
-            formData.forEach(function(value, key) {
-    console.log(key + ': ' + value);
+            formData.append('id_open', idOpen);
+
+
+        formData.forEach(function(value, key) {
+console.log(key + ': ' + value);
 });
-            $.ajax({
-                url: "ajax/salesajax.php",
-                method: "POST",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(respuesta) {
+        $.ajax({
+            url: "ajax/salesajax.php",
+            method: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(respuesta) {
 
-                    
-                    mensajeToast('success', respuesta);
+                
+                mensajeToast('success', respuesta);
 
-                    table.clear().draw();
+                table.clear().draw();
 
-                    LimpiarInputs();
+                LimpiarInputs();
 
-                    //CargarNroBoleta();
+                //CargarNroBoleta();
 
-                 //  window.open('http://localhost:8080/ajax/salesajax.php?nro_boleta='+nro_boleta);
+             //  window.open('http://localhost:8080/ajax/salesajax.php?nro_boleta='+nro_boleta);
 
-                }
-            });
+            }
+        });
 
-
-        } else {
-
-            mensajeToast('error', 'INGRESE EL MONTO EN EFECTIVO');
-        }
 
     } else {
 
-        mensajeToast('error', 'NO HAY PRODUCTOS EN EL LISTADO');
-
+        mensajeToast('error', 'INGRESE EL MONTO EN EFECTIVO');
     }
 
-    $("#iptCodigoVenta").focus();
+} else {
+
+    mensajeToast('error', 'NO HAY PRODUCTOS EN EL LISTADO');
+
+}
+
+$("#iptCodigoVenta").focus();
 
 } /* FIN realizarVenta */
 </script>
+
+
+
+<?php
+    }
+
+?>
+
+<!-- Warning de confirmar abrir caja -->
+
+<script>
+function confirmOpened(userId, idOpen, fechaActual) {
+    Swal.fire({
+        title: '¿Estás seguro de que deseas abrir caja?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, abrir',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "<?php echo constant('URL') ?>crud_opening/editOpened", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    CargarContenido('views/sales/index.php', 'content-wrapper');
+                } else {
+                    console.error('Error en la solicitud: ' + xhr.status);
+                }
+            };
+            
+            // Envía id_user, id_open y fecha_actual como parámetros
+            xhr.send("id_user=" + userId + "&id_open=" + idOpen + "&fecha_actual=" + fechaActual);
+        }
+    });
+}
+</script>
+
+
+<!-- Warning de confirmar cierre de caja -->
+
+
+<script>
+function confirmClosed(userId, idOpen, fechaActual) {
+    Swal.fire({
+        title: '¿Estás seguro de que deseas cerrar caja?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "<?php echo constant('URL') ?>crud_opening/editClosed", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    CargarContenido('views/sales/index.php', 'content-wrapper');
+                } else {
+                    console.error('Error en la solicitud: ' + xhr.status);
+                }
+            };
+            
+            // Envía id_user, id_open y fecha_actual como parámetros
+            xhr.send("id_user=" + userId + "&id_open=" + idOpen + "&fecha_actual=" + fechaActual);
+        }
+    });
+}
+</script>
+
