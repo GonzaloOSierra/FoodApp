@@ -38,16 +38,28 @@ class Sales{
     
     public function crlRegisterVenta($array, $totalVenta, $payment, $id_open) {
         error_log('Sales::crlRegisterVenta');
-        error_log($id_open);
-        error_log($id_open);
-        error_log($id_open);
-        error_log($id_open);
-        error_log($id_open);
-        error_log($id_open);
 
-        $producto = Salesmodel::mdlRegisterVenta($array, $totalVenta, $payment, $id_open);
-        return $producto;
+        error_log($id_open);
+    
+        // Crear un nuevo id_order
+        $orderId = Salesmodel::createOrderId();
+    
+        // Obtener el último registro de la tabla order
+        $lastOrder = Salesmodel::getOrder();
+    
+        if ($lastOrder !== false) {
+            // Obtener el id_order del último registro
+            $lastOrderId = $lastOrder['id_order'];
+    
+            // Llamar al método mdlRegisterVenta con el nuevo id_order
+            $producto = Salesmodel::mdlRegisterVenta($array, $totalVenta, $payment, $id_open, $lastOrderId);
+            return $producto;
+        } else {
+            // Manejar el caso en que no se pudo obtener el último registro
+            return "Error al obtener el último registro de la tabla 'order'";
+        }
     }
+    
 
 }
 

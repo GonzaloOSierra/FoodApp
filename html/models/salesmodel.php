@@ -71,10 +71,53 @@ class SalesModel {
         
         return $query->fetch(PDO::FETCH_OBJ);
     }
+
+
+    /*===================================================================
+    Crear OrderId para insertarla en mdlRegisterVenta
+    ====================================================================*/
+
+
+    public function createOrderId() {
+        try {
+            $query = Conection::connect()->prepare("INSERT INTO `order` (order_state) VALUES (1)");
+            $query->execute();
+            
+            // Obtener el ID del nuevo registro insertado
+            return Conection::connect()->lastInsertId();
+        } catch (PDOException $e) {
+            // Manejar la excepción (puedes registrarla, lanzarla nuevamente, etc.)
+            error_log("Error al crear el id_order: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+
+
+    public function getOrder()
+    {
+        try {
+            $conn = Conection::connect(); // Asegúrate de tener un método `connect` en tu clase de conexión
+    
+            // Utiliza la conexión para preparar y ejecutar la consulta
+            $query = $conn->prepare('SELECT * FROM `order` ORDER BY id_order DESC LIMIT 1');
+            $query->execute();
+    
+            return $query->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('SALESMODEL::getOrder -> PDOException ' . $e);
+            return false;
+        }
+    }
+    
+
+
+
     /*===================================================================
     buscar menu para agregar a la tabla
     ====================================================================*/
-    public function mdlRegisterVenta($array, $totalVenta, $payment, $id_open)
+    public function mdlRegisterVenta($array, $totalVenta, $payment, $id_open, $lastOrderId)
         {
         $allInsertionsSuccessful = true; // Variable para rastrear el estado de las inserciones
     
@@ -88,8 +131,8 @@ class SalesModel {
     
                 // Preparar la sentencia para registrar la venta en detalle_ventas
                 $query = Conection::connect()->prepare(
-                    "INSERT INTO detalle_ventas (id_menu, cantidad, precio_total, id_payment)
-                    VALUES (:id_menu, :cantidad, :totalVenta, :id_payment)"
+                    "INSERT INTO detalle_ventas (id_menu, cantidad, precio_total, id_payment, id_order)
+                    VALUES (:id_menu, :cantidad, :totalVenta, :id_payment, :id_order)"
                 );
     
                 $id_payment = $payment; // Asumiendo que $payment contiene el valor que deseas usar
@@ -98,6 +141,8 @@ class SalesModel {
                 $query->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
                 $query->bindParam(':totalVenta', $totalVenta, PDO::PARAM_INT);
                 $query->bindParam(':id_payment', $id_payment, PDO::PARAM_INT);
+                $query->bindParam(':id_order', $lastOrderId, PDO::PARAM_INT);
+
     
                 // Realizar la inserción en detalle_ventas
                 if ($query->execute()) {
