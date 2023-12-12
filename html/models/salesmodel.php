@@ -74,8 +74,8 @@ class SalesModel {
     /*===================================================================
     buscar menu para agregar a la tabla
     ====================================================================*/
-    public function mdlRegisterVenta($array, $totalVenta, $payment)
-    {
+    public function mdlRegisterVenta($array, $totalVenta, $payment, $id_open)
+        {
         $allInsertionsSuccessful = true; // Variable para rastrear el estado de las inserciones
     
         foreach ($array as $item) {
@@ -133,6 +133,69 @@ class SalesModel {
                     $allInsertionsSuccessful = false;
                     break; // Salir del bucle si hay una inserción fallida
                 }
+                
+                if($id_payment == 1){
+                    $updateBoxCash = Conection::connect()->prepare(
+                        "UPDATE box_cash
+                        SET amount_credit_final = amount_credit_final + :totalVenta
+                        WHERE id_open = :id_open"
+                    );
+                    
+                    $updateBoxCash->bindParam(':totalVenta', $totalVenta, PDO::PARAM_INT);
+                    $updateBoxCash->bindParam(':id_open', $id_open, PDO::PARAM_INT);
+                    
+                    if (!$updateBoxCash->execute()) {
+                        // Si una actualización en Box_cash falla, establece la variable $allInsertionsSuccessful a false
+                        $allInsertionsSuccessful = false;
+                        break; // Salir del bucle si hay una actualización fallida en Box_cash
+                    }
+                }else if($id_payment == 2){
+                    $updateBoxCash = Conection::connect()->prepare(
+                        "UPDATE box_cash
+                        SET amount_efective_final = amount_efective_final + :totalVenta
+                        WHERE id_open = :id_open"
+                    );
+                    
+                    $updateBoxCash->bindParam(':totalVenta', $totalVenta, PDO::PARAM_INT);
+                    $updateBoxCash->bindParam(':id_open', $id_open, PDO::PARAM_INT);
+                    
+                    if (!$updateBoxCash->execute()) {
+                        // Si una actualización en Box_cash falla, establece la variable $allInsertionsSuccessful a false
+                        $allInsertionsSuccessful = false;
+                        break; // Salir del bucle si hay una actualización fallida en Box_cash
+                    }
+                }else if($id_payment == 3){
+                    $updateBoxCash = Conection::connect()->prepare(
+                        "UPDATE box_cash
+                        SET amount_qr_final = amount_qr_final + :totalVenta
+                        WHERE id_open = :id_open"
+                    );
+                    
+                    $updateBoxCash->bindParam(':totalVenta', $totalVenta, PDO::PARAM_INT);
+                    $updateBoxCash->bindParam(':id_open', $id_open, PDO::PARAM_INT);
+                    
+                    if (!$updateBoxCash->execute()) {
+                        // Si una actualización en Box_cash falla, establece la variable $allInsertionsSuccessful a false
+                        $allInsertionsSuccessful = false;
+                        break; // Salir del bucle si hay una actualización fallida en Box_cash
+                    }
+                }else if($id_payment == 4){
+                    $updateBoxCash = Conection::connect()->prepare(
+                        "UPDATE box_cash
+                        SET amount_debito_final = amount_debito_final + :totalVenta
+                        WHERE id_open = :id_open"
+                    );
+                    
+                    $updateBoxCash->bindParam(':totalVenta', $totalVenta, PDO::PARAM_INT);
+                    $updateBoxCash->bindParam(':id_open', $id_open, PDO::PARAM_INT);
+                    
+                    if (!$updateBoxCash->execute()) {
+                        // Si una actualización en Box_cash falla, establece la variable $allInsertionsSuccessful a false
+                        $allInsertionsSuccessful = false;
+                        break; // Salir del bucle si hay una actualización fallida en Box_cash
+                    }
+                }
+
             } else {
                 // Si la cadena no se dividió en tres partes, establece la variable $allInsertionsSuccessful a false
                 $allInsertionsSuccessful = false;

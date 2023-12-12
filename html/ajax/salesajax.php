@@ -42,15 +42,14 @@ class SalesAjax {
  
      }
      public function registerVenta($array, $totalVenta, $payment) {
-    
-       
-         $product = new Sales();
-         $result = $product->crlRegisterVenta($array, $totalVenta, $payment);
-        
-         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-         
- 
-     }
+        $id_open = isset($_POST['id_open']) ? $_POST['id_open'] : null;
+
+        $product = new Sales();
+        $result = $product->crlRegisterVenta($array, $totalVenta, $payment, $id_open);
+
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    } 
+
 
 
 
@@ -69,12 +68,11 @@ error_log("ACTION: ".$_POST['action']);
     error_log("ACTION: ".$_POST['action']);
         $var = new SalesAjax();
         $var->verifyStock();
-}if(isset($_POST['arr'])){
-   
-        $var = new SalesAjax();
-        $var->registerVenta($_POST['arr'], $_POST['total_venta'], $_POST['payment']);
 }
-
+if(isset($_POST['arr'])) {
+    $var = new SalesAjax();
+    $var->registerVenta($_POST['arr'], $_POST['total_venta'], $_POST['payment']);
+}
 
 
 
