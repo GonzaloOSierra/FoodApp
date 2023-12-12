@@ -66,10 +66,10 @@ session_start();
                      </ul>
                  </li>
 
-                 <?php }  if ($_SESSION["user_role"]==2 or $_SESSION["user_role"]==1) { ?>
+                 <?php }  if ($_SESSION["user_role"]==3 or $_SESSION["user_role"]==1) { ?>
                  <li class="nav-item">
                      <a href="#" class="nav-link">
-                     <i class="nav-icon fas fa-store-alt text-warning"></i> 
+                     <i class="nav-icon fas fa-fire text-warning"></i> 
                          <p>Cocinas<i class="right fas fa-angle-left"></i></p>
                      </a>
                      <ul class="nav nav-treeview">
@@ -83,11 +83,29 @@ session_start();
                      </ul>
                  </li>
 
+
+                 <?php }  if ($_SESSION["user_role"]==3 or $_SESSION["user_role"]==1 or $_SESSION["user_role"]==2) { ?>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                     <i class="nav-icon fas fa-user-tag text-warning"></i> 
+                         <p>Clientes<i class="right fas fa-angle-left"></i></p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link" style="cursor:pointer;" onclick="CargarContenido('views/client/client.php','content-wrapper')">
+                                 <i class="far fa-circle nav-icon"></i>
+                                 <p>Clientes Listado</p>
+                             </a>
+                         </li>
+                         
+                     </ul>
+                 </li>
+
                  <?php }  if ($_SESSION["user_role"]==1) { ?>
                  <li class="nav-item">
                      <a href="#" class="nav-link">
                      
-                     <i class="nav-icon fas fa-utensils text-warning"></i>
+                     <i class="nav-icon fas fa-lock-open text-warning"></i>
                          <p>Caja<i class="right fas fa-angle-left"></i></p>
                      </a>
                      <ul class="nav nav-treeview">
@@ -217,7 +235,7 @@ session_start();
                  <li class="nav-item">
                      <a href="#" class="nav-link">
                      
-                     <i class="nav-icon fas fa-utensils text-warning"></i>
+                     <i class="nav-icon fas fa-building text-warning"></i>
                          <p>Establecimiento<i class="right fas fa-angle-left"></i></p>
                      </a>
                      <ul class="nav nav-treeview">
