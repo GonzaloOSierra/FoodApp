@@ -55,7 +55,7 @@ if (!empty($terminals)) {
 
             const xhr = new XMLHttpRequest();
 
-            xhr.open('POST', '<?php echo constant('URL') ?>crud_opening/createOpen', true);
+            xhr.open('POST', '<?php echo constant('URL') ?>crud_terminal/createTerminal', true);
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
@@ -66,6 +66,8 @@ if (!empty($terminals)) {
                     text: 'Formulario enviado con éxito'
                 }).then(() => {
                     formulario.reset();
+                    CargarContenido('views/establishment/create_terminal.php', 'content-wrapper');
+
                 });
                 } else {
                 Swal.fire({
